@@ -18,7 +18,7 @@ extern "C"
         }
 
         // Blur the image
-        cv::GaussianBlur(img, img, cv::Size(15, 15), 0);
+        cv::GaussianBlur(img, img, cv::Size(49, 49), 0);
 
         // Convert the blurred image back to RGBA if it was originally RGBA
         if (channels == 4)
@@ -26,53 +26,22 @@ extern "C"
             cv::cvtColor(img, img, cv::COLOR_BGR2RGBA);
         }
 
-        Return the pointer to the image data
+        // Copy the blurred image data back to the original memory location
+        memcpy((void *)imgptr, img.data, width * height * channels);
 
-            return imgptr;
+        return imgptr;
     }
-}
-
-std::vector<int> _detectFaces(const std::vector<int> &image, int width, int height)
-{
-    // Convert vector to OpenCV image
-    cv::Mat img(height, width, CV_8UC1, (void *)image.data());
-
-    // Load Haar cascade classifier for face detection
-    cv::CascadeClassifier faceCascade;
-    faceCascade.load("/path/to/haarcascade_frontalface_default.xml");
-
-    // Convert image to grayscale
-    cv::cvtColor(img, img, cv::COLOR_GRAY2BGR);
-
-    // Detect faces
-    std::vector<cv::Rect> faces;
-    faceCascade.detectMultiScale(img, faces, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
-
-    // Draw bounding boxes around detected faces
-    for (size_t i = 0; i < faces.size(); ++i)
-    {
-        cv::rectangle(img, faces[i], cv::Scalar(255, 0, 0), 2);
-    }
-
-    // Convert modified image to vector
-    std::vector<int> modifiedImage;
-    if (!img.empty())
-    {
-        modifiedImage.assign(img.datastart, img.dataend);
-    }
-
-    return modifiedImage;
 }
 
 std::string _hello(std::string input)
 {
-    if (input == "good")
+    if (input == "hello c++")
     {
-        return "good sent";
+        return "hello from c++";
     }
     else
     {
-        return "not good sent";
+        return "who are you?";
     }
 }
 
